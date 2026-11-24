@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Luna Widget</title>
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Luna Widget">
+<meta name="theme-color" content="#D6E8F6">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;background:transparent}
+body{font-family:"Bricolage Grotesque",-apple-system,system-ui,"Segoe UI",Roboto,sans-serif;color:#1f2430}
+:root{--u:2.8px}
+#w{position:fixed;top:0;left:0;width:100%;height:100%;max-height:calc(var(--u)*100);display:flex;align-items:center;gap:calc(var(--u)*3);padding:0 calc(var(--u)*4);
+border-radius:calc(var(--u)*16);overflow:hidden;
+background:linear-gradient(180deg,#D6E8F6 0%,#E9EEF7 50%,#FAF1EE 100%)}
+.cur{flex:none;display:flex;flex-direction:column;align-items:center;gap:calc(var(--u)*2)}
+.cur .sv{display:block;width:calc(var(--u)*58);height:calc(var(--u)*58);filter:drop-shadow(0 4px 8px rgba(90,110,140,.2))}
+.cur b{font-size:calc(var(--u)*14);font-weight:800;letter-spacing:-.02em;line-height:1;white-space:nowrap}
+.sep{flex:none;width:1px;height:70%;background:rgba(0,0,0,.1)}
+.nxt{flex:1;min-width:0;display:flex;justify-content:space-between;align-items:center;gap:0}
+.nxt .d{flex:0 1 calc(var(--u)*36);min-width:0;display:flex;flex-direction:column;align-items:center;gap:calc(var(--u)*3)}
+.nxt .sv{display:block;width:100%;height:auto;aspect-ratio:1}
+.nxt small{font-size:calc(var(--u)*13);font-weight:700;color:#55627a;line-height:1}
+#w{justify-content:flex-start;gap:0;padding:0 calc(var(--u)*15.2) 0 calc(var(--u)*13)}
+.cur{margin:0 calc(var(--u)*13) 0 0;width:calc(var(--u)*58)}
+.nxt{margin-left:calc(var(--u)*15.2)}
+.msg{text-align:center;font-size:calc(var(--u)*10);line-height:1.3;color:#55627a;width:100%}
+.msg b{color:#1f2430}
+</style></head><body>
+<div id="w"></div>
+<script>
+const K="luna_v1",KW="luna_widget_v1";
+const BC={mest:"#F28B82",foll:"#8FD6A0",ovul:"#FFD45E",lut:"#C5B3EC",pms:"#9DB9F0",neu:"#A3A6AC"};
+const PC={mest:"#E5645E",foll:"#3FAE6A",ovul:"#E6AC48",lut:"#9B7FD1",pms:"#5C8FD6",neu:"#A0A4AA"};
+const D=s=>{const[a,b,c]=s.split("-").map(Number);return new Date(a,b-1,c)};
+const diff=(a,b)=>Math.round((b-a)/864e5);
+const add=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
+const real=()=>{const n=new Date();return new Date(n.getFullYear(),n.getMonth(),n.getDate())};
+
+/* ---- Dati: 1) localStorage condiviso (stessa origine) 2) link con ?c=...&p=... 3) copia salvata dal widget ---- */
+function load(){
+  const q=new URLSearchParams(location.search);
+  if(q.get("c")){
+    const c=q.get("c").split(",").filter(x=>/^\d{4}-\d{2}-\d{2}$/.test(x));
+    if(c.length){
+      const o={cycles:c,p:+q.get("p")||5};
+      try{localStorage.setItem(KW,JSON.stringify(o))}catch(e){}
+      history.replaceState(null,"",location.pathname);
+      return o;
+    }
+  }
+  for(const key of [K,KW]){
+    try{
+      const r=JSON.parse(localStorage.getItem(key)||"null");
+      if(r&&Array.isArray(r.cycles)&&r.cycles.length){
+        if(key===K)try{localStorage.setItem(KW,JSON.stringify({cycles:r.cycles,p:r.p||5}))}catch(e){}
+        return{cycles:r.cycles,p:r.p||5};
+      }
+    }catch(e){}
+  }
+  return null;
+}
+const S=load();
+
+function calc(){
+  const c=[...S.cycles].sort();let L=28;
+  if(c.length>1){let g=0;for(let i=1;i<c.length;i++)g+=diff(D(c[i-1]),D(c[i]));L=Math.min(40,Math.max(21,Math.round(g/(c.length-1))))}
+  const last=add(D(c[c.length-1]),-Math.floor((S.p||5)/2));
+  let d=Math.max(1,diff(last,real())+1);
+  if(d>L)d=(d-1)%L+1; // stessa logica di moons.html per il ritardo
+  return{L,last,d,P:S.p||5};
+}
+function ph(day,L,P){const o=L-14;
+  if(day<=P)return"mest";if(day>=L-4)return"pms";
+  if(day>=o-1&&day<=o+1)return"ovul";if(day>=P+1&&day<=o-2)return"foll";
+  if(day>=o+4&&day<=L-5)return"lut";return"neu"}
+function heart(x,y){return`<path d="M${x} ${y+7}C${x-12} ${y-1} ${x-7} ${y-10} ${x} ${y-4}C${x+7} ${y-10} ${x+12} ${y-1} ${x} ${y+7}Z" fill="#E5484D" stroke="none"/>`}
+function bub(k,s){const c=BC[k],F={
+neu:`<circle cx="38" cy="46" r="3.8" fill="#3B2F2F" stroke="none"/><circle cx="66" cy="46" r="3.8" fill="#3B2F2F" stroke="none"/><path d="M40 63H64"/>`,
+foll:`<path d="M31 49Q38 38 45 49M59 49Q66 38 73 49M38 58Q52 76 66 58"/>`,
+ovul:`${heart(38,45)}${heart(66,45)}<path d="M42 62Q52 73 62 62"/><circle cx="27" cy="60" r="5.5" fill="#FF6F7D" opacity=".45" stroke="none"/><circle cx="77" cy="60" r="5.5" fill="#FF6F7D" opacity=".45" stroke="none"/>`,
+lut:`<path d="M31 46Q38 54 45 46M59 46Q66 54 73 46M45 62Q52 69 59 62"/>`,
+mest:`<circle cx="38" cy="50" r="3.8" fill="#3B2F2F" stroke="none"/><circle cx="66" cy="50" r="3.8" fill="#3B2F2F" stroke="none"/><path d="M29 42L45 36M75 42L59 36M42 69Q52 58 62 69"/><path d="M73 57Q68 64 73 68Q78 64 73 57Z" fill="#8EC5F0" stroke="none"/>`,
+pms:`<circle cx="38" cy="51" r="3.8" fill="#3B2F2F" stroke="none"/><circle cx="66" cy="51" r="3.8" fill="#3B2F2F" stroke="none"/><path d="M29 36L45 42M75 36L59 42M40 67L46 61L52 67L58 61L64 67"/>`}[k];
+  const w=s?` width="${s}" height="${s}"`:"";
+  return`<svg class="sv" viewBox="2 -4 100 100"${w}><circle cx="52" cy="46" r="40" fill="${c}"/><g fill="none" stroke="#3B2F2F" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">${F}</g></svg>`}
+
+function render(){
+  const w=document.getElementById("w");
+  if(!S){
+    w.innerHTML=`<div class="msg"><b>Nessun dato del ciclo.</b><br>Apri la pagina dalla stessa app/sito di Luna, oppure usa il link con i dati (?c=data1,data2,data3,data4&amp;p=5).</div>`;
+    return;
+  }
+  const{L,d,P}=calc();
+  const cur=ph(d,L,P);
+  const WD=["D","L","M","M","G","V","S"],MD={mest:"Stanca",foll:"Carica",ovul:"Sicura",lut:"Calma",pms:"Sensibile",neu:"Tranquilla"};
+  let n="";
+  for(let i=1;i<=6;i++){const dd=((d-1+i)%L)+1;n+=`<div class="d">${bub(ph(dd,L,P))}<small>${WD[add(real(),i).getDay()]}</small></div>`}
+  w.innerHTML=`<div class="cur">${bub(cur)}<b style="color:${PC[cur]}">${MD[cur]}</b></div><div class="sep"></div><div class="nxt">${n}</div>`;
+}
+// unità di misura: 1% dell'altezza del riquadro, limitata dalla larghezza (proporzione ~3.75:1)
+function fit(){const h=window.innerHeight||innerWidth/3.75,w=window.innerWidth||h*3.75;
+  document.documentElement.style.setProperty("--u",Math.max(1,Math.min(h,w/3.75))/100+"px")}
+fit();addEventListener("resize",fit);
+render();
+// aggiorna a mezzanotte / quando torna visibile
+let day=real().getTime();
+setInterval(()=>{if(real().getTime()!==day){day=real().getTime();render()}},60000);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)render()});
+</script></body></html>

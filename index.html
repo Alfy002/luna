@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="it"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-visual">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&display=swap" rel="stylesheet">
 <title>Luna</title>
 <link rel="icon" type="image/png" href="icon.png">
@@ -432,7 +432,7 @@ async function normSfx(){try{const OC=window.OfflineAudioContext||window.webkitO
   fft(re,im);let E=0;for(let i=0;i<N;i++){const f=(i<=N/2?i:N-i)*sr/N,w=WF(f);E+=w*w*(re[i]*re[i]+im[i]*im[i])}
   r[k]=Math.sqrt(E/N/sr);pk[k]=p}
  const ks=Object.keys(r).filter(k=>r[k]>0&&pk[k]>0);if(!ks.length)return;const v=ks.map(k=>r[k]).sort((a,b)=>a-b);let T=(v[Math.floor((v.length-1)/2)]+v[Math.ceil((v.length-1)/2)])/2;
- ks.forEach(k=>{T=Math.min(T,.9/pk[k]*r[k])});ks.forEach(k=>GN[k]=T/r[k]);const LB={mest:3.2,lut:1.6,pms:1.6};ks.forEach(k=>{if(LB[k])GN[k]*=LB[k]})}catch(e){}}
+ ks.forEach(k=>{T=Math.min(T,.9/pk[k]*r[k])});ks.forEach(k=>GN[k]=T/r[k]);const LB={mest:3.2,lut:1.6,pms:1};ks.forEach(k=>{if(LB[k])GN[k]*=LB[k]})}catch(e){}}
 document.addEventListener("pointerdown",e=>{if(!e.target.closest(".big"))return;const c=document.querySelector(".fl.c0");if(c){c.style.transition="scale .12s";c.style.scale=".9"}});
 const relBig=()=>{const c=document.querySelector(".fl.c0");if(c&&c.style.scale){c.style.transition="scale .15s";c.style.scale=""}};
 document.addEventListener("pointerup",()=>setTimeout(relBig,80));document.addEventListener("pointercancel",relBig);
