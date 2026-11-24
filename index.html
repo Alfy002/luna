@@ -3,6 +3,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&display=swap" rel="stylesheet">
 <title>Luna · Guida al ciclo</title>
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#FBF6F1">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Luna">
 <style>
 :root{--a:#A0A4AA;--s:#F2F3F5;--t:#23262b;--m:#6b7078;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -685,4 +692,5 @@ window.addEventListener("resize",placePill);
  window.addEventListener("pointerup",e=>end(e,true));window.addEventListener("pointercancel",e=>end(e,false));
  nv.addEventListener("click",e=>{if(sup){e.stopPropagation();e.preventDefault();sup=false}},true)})();
 render();normSfx();
+if("serviceWorker"in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
 </script></body></html>
