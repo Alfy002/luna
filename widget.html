@@ -25,9 +25,10 @@ background:linear-gradient(180deg,#D6E8F6 0%,#E9EEF7 50%,#FAF1EE 100%)}
 .nxt .d{flex:0 1 calc(var(--u)*36);min-width:0;display:flex;flex-direction:column;align-items:center;gap:calc(var(--u)*3)}
 .nxt .sv{display:block;width:100%;height:auto;aspect-ratio:1}
 .nxt small{font-size:calc(var(--u)*13);font-weight:700;color:#55627a;line-height:1}
-#w{justify-content:flex-start;gap:0;padding:0 calc(var(--u)*15.2) 0 calc(var(--u)*13)}
-.cur{margin:0 calc(var(--u)*13) 0 0;width:calc(var(--u)*58)}
-.nxt{margin-left:calc(var(--u)*15.2)}
+/* T = margine sopra il cerchio grande = 18.8u. Sinistra 1.75T, destra 1.5T, spazio tra cerchio grande e primo piccolo 2T (linea al centro) */
+#w{justify-content:flex-start;gap:0;padding:0 calc(var(--u)*24.6) 0 calc(var(--u)*27.1)}
+.cur{margin:0 calc(var(--u)*14.1 - .5px) 0 0;width:calc(var(--u)*58);position:relative;top:calc(var(--u)*-2.1)}
+.nxt{margin-left:calc(var(--u)*14.1 - .5px)}
 .msg{text-align:center;font-size:calc(var(--u)*10);line-height:1.3;color:#55627a;width:100%}
 .msg b{color:#1f2430}
 </style></head><body>
@@ -97,10 +98,10 @@ function render(){
   }
   const{L,d,P}=calc();
   const cur=ph(d,L,P);
-  const WD=["D","L","M","M","G","V","S"],MD={mest:"Stanca",foll:"Carica",ovul:"Sicura",lut:"Calma",pms:"Sensibile",neu:"Tranquilla"};
+  const WD=["D","L","M","M","G","V","S"],MD={mest:"Fragile",foll:"Solare",ovul:"Audace",lut:"Calma",pms:"Tenera",neu:"Serena"},W2=k=>MD[k];
   let n="";
   for(let i=1;i<=6;i++){const dd=((d-1+i)%L)+1;n+=`<div class="d">${bub(ph(dd,L,P))}<small>${WD[add(real(),i).getDay()]}</small></div>`}
-  w.innerHTML=`<div class="cur">${bub(cur)}<b style="color:${PC[cur]}">${MD[cur]}</b></div><div class="sep"></div><div class="nxt">${n}</div>`;
+  w.innerHTML=`<div class="cur">${bub(cur)}<b style="color:${PC[cur]}">${W2(cur)}</b></div><div class="sep"></div><div class="nxt">${n}</div>`;
 }
 // unità di misura: 1% dell'altezza del riquadro, limitata dalla larghezza (proporzione ~3.75:1)
 function fit(){const h=window.innerHeight||innerWidth/3.75,w=window.innerWidth||h*3.75;
