@@ -6,7 +6,7 @@
 <link rel="icon" type="image/png" href="icon.png">
 <link rel="apple-touch-icon" href="icon.png">
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#FBF6F1">
+<meta name="theme-color" content="#1f2430">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Luna">
@@ -407,7 +407,9 @@ d:["Pranzo fuori improvvisato","Passeggiata al tramonto con gelato","Cinema","Lo
 const ORD=["mest","foll","ovul","neu","lut","pms"];
 const K="luna_v1";let S={cycles:[],p:5,notes:[]};
 try{const r=localStorage.getItem(K);if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
-const save=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}};
+const lnk=()=>S.cycles&&S.cycles.length?"?c="+[...S.cycles].sort().join(",")+"&p="+(S.p||5):"";
+const save=()=>{S.C=lnk();try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}};
+function cpC(b){let base="widget.html";try{if(/^https?:|^file:/.test(location.href))base=new URL("widget.html",location.href).href}catch(e){}const u=base+lnk(),t=b.textContent,ok=()=>{b.style.cssText="height:"+b.offsetHeight+"px;display:flex;align-items:center;justify-content:center;gap:6px";b.innerHTML='<span>Copiato</span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';setTimeout(()=>{b.textContent=t;b.style.cssText=""},1400)},fb=()=>{const a=document.createElement("textarea");a.value=u;a.style.cssText="position:fixed;opacity:0";document.body.appendChild(a);a.select();try{document.execCommand("copy")}catch(e){}a.remove();ok()};try{navigator.clipboard.writeText(u).then(ok,fb)}catch(e){fb()}}
 const D=s=>{const[a,b,c]=s.split("-").map(Number);return new Date(a,b-1,c)};
 const iso=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
 const T0=performance.now();let OFF=0;const real=()=>{const n=new Date();return new Date(n.getFullYear(),n.getMonth(),n.getDate())};
@@ -432,7 +434,7 @@ async function normSfx(){try{const OC=window.OfflineAudioContext||window.webkitO
   fft(re,im);let E=0;for(let i=0;i<N;i++){const f=(i<=N/2?i:N-i)*sr/N,w=WF(f);E+=w*w*(re[i]*re[i]+im[i]*im[i])}
   r[k]=Math.sqrt(E/N/sr);pk[k]=p}
  const ks=Object.keys(r).filter(k=>r[k]>0&&pk[k]>0);if(!ks.length)return;const v=ks.map(k=>r[k]).sort((a,b)=>a-b);let T=(v[Math.floor((v.length-1)/2)]+v[Math.ceil((v.length-1)/2)])/2;
- ks.forEach(k=>{T=Math.min(T,.9/pk[k]*r[k])});ks.forEach(k=>GN[k]=T/r[k]);const LB={mest:3.2,lut:1.6,pms:1};ks.forEach(k=>{if(LB[k])GN[k]*=LB[k]})}catch(e){}}
+ ks.forEach(k=>{T=Math.min(T,.9/pk[k]*r[k])});ks.forEach(k=>GN[k]=T/r[k]);const LB={mest:3.2,lut:1.6,pms:1.25};ks.forEach(k=>{if(LB[k])GN[k]*=LB[k]})}catch(e){}}
 document.addEventListener("pointerdown",e=>{if(!e.target.closest(".big"))return;const c=document.querySelector(".fl.c0");if(c){c.style.transition="scale .12s";c.style.scale=".9"}});
 const relBig=()=>{const c=document.querySelector(".fl.c0");if(c&&c.style.scale){c.style.transition="scale .15s";c.style.scale=""}};
 document.addEventListener("pointerup",()=>setTimeout(relBig,80));document.addEventListener("pointercancel",relBig);
@@ -529,7 +531,7 @@ function cycles(first){const c=[...S.cycles].sort();const v=i=>c[i-(4-c.length)]
  ${[0,1,2,3].map(i=>`<label>Ciclo ${i+1}${i===3?" (il più recente)":""}</label><input type="date" id="c${i}" value="${v(i)}" oninput="chk()" onchange="chk()">`).join("")}
  <label>Durata media delle mestruazioni (giorni)</label><input type="number" id="pp" min="2" max="10" value="${S.p}" oninput="chk()" onchange="chk()">
  <div class="err" id="er"></div><button class="btn" ${first?'id="sb"':""} onclick="saveC()">${first?"Inizia":"Salva"}</button>
- ${first?"":'<button class="btn ghost" onclick="startToday(this)">Il ciclo è iniziato oggi</button>'}`}
+ ${first?"":'<button class="btn ghost" onclick="cpC(this)">Copia URL widget</button>'}`}
 function vld(){const a=[0,1,2,3].map(i=>document.getElementById("c"+i).value),p=+document.getElementById("pp").value;
  if(a.some(x=>!x))return"Compila tutte e 4 le date.";
  for(let i=1;i<4;i++)if(a[i]<=a[i-1])return"Le date devono andare dal più vecchio al più recente.";
