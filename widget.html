@@ -9,8 +9,6 @@
 <meta name="apple-mobile-web-app-title" content="Luna Widget">
 <meta name="theme-color" content="#D6E8F6">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&display=swap" rel="stylesheet">
-<script>/* aperta come pagina intera (finestra più alta che larga) -> vai alla home */
-if(window.innerHeight>window.innerWidth){location.replace("index.html")}</script>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%;overflow:hidden;background:#FAF1EE}
@@ -21,7 +19,7 @@ overflow:hidden;
 background:linear-gradient(180deg,#D6E8F6 0%,#E9EEF7 50%,#FAF1EE 100%)}
 .cur{flex:none;display:flex;flex-direction:column;align-items:center;gap:calc(var(--u)*2)}
 .cur .sv{display:block;width:calc(var(--u)*58);height:calc(var(--u)*58);filter:drop-shadow(0 4px 8px rgba(90,110,140,.2))}
-.cur b{font-size:calc(var(--u)*14);font-weight:800;letter-spacing:-.02em;line-height:1;white-space:nowrap}
+.cur b{font-size:calc(var(--u)*14);font-weight:800;letter-spacing:-.02em;line-height:1;white-space:nowrap;color:#55627a;position:relative;top:-2px}
 .sep{flex:none;width:1px;height:70%;background:rgba(0,0,0,.1)}
 .nxt{flex:1;min-width:0;display:flex;justify-content:space-between;align-items:center;gap:0}
 .nxt .d{flex:0 1 calc(var(--u)*36);min-width:0;display:flex;flex-direction:column;align-items:center;gap:calc(var(--u)*3)}
@@ -103,7 +101,7 @@ function render(){
   const WD=["D","L","M","M","G","V","S"],MD={mest:"Fragile",foll:"Solare",ovul:"Audace",lut:"Calma",pms:"Tenera",neu:"Serena"},W2=k=>MD[k];
   let n="";
   for(let i=1;i<=6;i++){const dd=((d-1+i)%L)+1;n+=`<div class="d">${bub(ph(dd,L,P))}<small>${WD[add(real(),i).getDay()]}</small></div>`}
-  w.innerHTML=`<div class="cur">${bub(cur)}<b style="color:${PC[cur]}">${W2(cur)}</b></div><div class="sep"></div><div class="nxt">${n}</div>`;
+  w.innerHTML=`<div class="cur">${bub(cur)}<b>${W2(cur)}</b></div><div class="sep"></div><div class="nxt">${n}</div>`;
 }
 // unità di misura: 1% dell'altezza del riquadro, limitata dalla larghezza (proporzione ~3.75:1)
 function fit(){const h=window.innerHeight||innerWidth/3.75,w=window.innerWidth||h*3.75;
