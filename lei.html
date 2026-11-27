@@ -634,7 +634,7 @@ function avUp(inp){const f=inp.files&&inp.files[0];if(!f)return;const im=new Ima
 function sl(k,v){S.lei=S.lei||{};S.lei[k]=v;save()}
 let fdx=null;const fcl=(k,on)=>fdx&&fdx.k===k?(on?" fi":" fo"):"";
 function tgS(k){S[k]=S[k]||[];const i=S[k].indexOf(sel);fdx={k,on:i<0};i<0?S[k].push(sel):S[k].splice(i,1);pop=null;save();render()}
-function selD(s){sel=s;pop=(S.apts||[]).some(a=>a.d===s)?{t:"view"}:null;render()}
+function selD(s){const same=sel===s,has=(S.apts||[]).some(a=>a.d===s);sel=s;pop=has?{t:"view"}:same?{t:"form"}:null;render()}
 document.addEventListener("touchmove",e=>{if(pop&&!e.target.closest(".md"))e.preventDefault()},{passive:false});
 function fmtT(el){let d=el.value.replace(/\D/g,"").slice(0,4);if(d.length&&+d[0]>2)d="0"+d;d=d.slice(0,4);if(d.length>=2&&+d.slice(0,2)>23)d="23"+d.slice(2);if(d.length>=4&&+d.slice(2,4)>59)d=d.slice(0,2)+"59";else if(d.length>=3&&+d[2]>5)d=d.slice(0,2)+"5"+d.slice(3);el.value=d.length>2?d.slice(0,2)+":"+d.slice(2):d}
 function saveA(id){const v=x=>document.getElementById(x).value,t=v("at").trim();if(!t){document.getElementById("at").focus();return}const hh=v("ah");if(hh&&!/^([01]\d|2[0-3]):[0-5]\d$/.test(hh)){document.getElementById("ah").focus();return}

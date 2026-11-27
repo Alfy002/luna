@@ -385,12 +385,12 @@ dont:["Non caricarti di impegni sull’onda dell’entusiasmo","Evita di trascur
 say:["Mi sento bene e me lo sono meritato.","Questa routine funziona: la tengo.","Posso godermela senza sensi di colpa."]}};
 const PM={
 del:{n:"Deluso",c:"#5C8FD6",s:"#E8F0FC",i:"Giornata pesante: qualcosa non è andato come speravi. Capita, ed è giusto prendersi il tempo per sistemare le cose."},
-neu:{n:"Neutro",c:"#A0A4AA",s:"#F2F3F5",i:"Giornata nella media, né su né giù. Un buon momento per mettere ordine e capire cosa ti va di fare."},
-fel:{n:"Felice",c:"#E6AC48",s:"#FFF4D8",i:"Ti senti bene, con energia e buonumore. Vale la pena capire cosa ha funzionato per poterlo ripetere."},
+neu:{n:"Neutro",c:"#9B7FD1",s:"#F1ECFA",i:"Giornata nella media, né su né giù. Un buon momento per mettere ordine e capire cosa ti va di fare."},
+fel:{n:"Felice",c:"#3FAE6A",s:"#E6F7EC",i:"Ti senti bene, con energia e buonumore. Vale la pena capire cosa ha funzionato per poterlo ripetere."},
 unk:{n:"Non segnato",c:"#A0A4AA",s:"#FAFAFB",i:"Nessun umore segnato. A fine giornata tocca l’emoji e scegli 0, 1 o 2.",do:[]}};
 ["del","neu","fel"].forEach(k=>PM[k].do=T[k].do);
 const PH=PM,MO=["del","neu","fel"],ORD=["foll","neu","pms"],SK={del:"pms",neu:"neu",fel:"foll"},HT=["do","dont","say"];
-const BC={del:"#9DB9F0",neu:"#A3A6AC",fel:"#FFD45E"};
+const BC={del:"#9DB9F0",neu:"#C5B3EC",fel:"#8FD6A0"};
 const MDD={del:"Un po’ giù",neu:"Tranquillo",fel:"Carico e sereno"};
 const Y={
 del:[["Sfogo","Dai un nome a ciò che senti","Scrivere in una frase cosa ti ha deluso rende il pensiero meno confuso e più gestibile."],["Corpo","Muoviti anche poco","Dieci minuti di camminata aiutano l’umore più di quanto sembri."],["Persone","Solo sì, isolato no","Tempo per te va bene: un messaggio a Luna o a un amico basta per non chiuderti."]],
@@ -465,7 +465,7 @@ function setTab(t){cleanN();if(t==="home"&&tab!=="home")hk="do";tab=t;nid=null;d
 const mk=dt=>{const v=S.mood[iso(dt)];return v===0||v===1||v===2?MO[v]:null};
 const phOn=dt=>mk(dt)||"unk",curK=()=>mk(today())||"neu",moodK=()=>SK[curK()];
 function bub(k,s){if(k==="unk")return`<svg class="sv" viewBox="2 -4 100 100" width="${s}" height="${s}"><circle cx="52" cy="46" r="39" fill="rgba(255,255,255,.55)" stroke="#9aa0aa" stroke-width="3.2" stroke-dasharray="7 6" stroke-linecap="round"/><path d="M42 38Q42 29 52 29Q62 29 62 37Q62 43 52 47V53" fill="none" stroke="#9aa0aa" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="52" cy="63" r="2.8" fill="#9aa0aa"/></svg>`;
- const F={neu:`<circle cx="38" cy="46" r="3.8" fill="#3B2F2F" stroke="none"/><circle cx="66" cy="46" r="3.8" fill="#3B2F2F" stroke="none"/><path d="M40 63H64"/>`,
+ const F={neu:`<path d="M31 46Q38 54 45 46M59 46Q66 54 73 46M45 62Q52 69 59 62"/>`,
  fel:`<path d="M31 49Q38 38 45 49M59 49Q66 38 73 49M38 58Q52 76 66 58"/>`,
  del:`<circle cx="38" cy="50" r="3.8" fill="#3B2F2F" stroke="none"/><circle cx="66" cy="50" r="3.8" fill="#3B2F2F" stroke="none"/><path d="M29 42L45 36M75 42L59 36M42 69Q52 58 62 69"/><path d="M73 57Q68 64 73 68Q78 64 73 57Z" fill="#fff" stroke="none"/>`}[k];
  return`<svg class="sv" viewBox="2 -4 100 100" width="${s}" height="${s}"><circle cx="52" cy="46" r="40" fill="${BC[k]}"/><g fill="none" stroke="#3B2F2F" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">${F}</g></svg>`}
@@ -562,7 +562,7 @@ function sl(k,v){S.me=S.me||{};S.me[k]=v;save()}
 function slm(v){shW(o=>{o.lei=o.lei||{};o.lei.m=v})}
 let fdx=null;const fcl=(k,on)=>fdx&&fdx.k===k?(on?" fi":" fo"):"";
 function tgS(k){const A=[...S[k]],i=A.indexOf(sel);fdx={k,on:i<0};i<0?A.push(sel):A.splice(i,1);S[k]=A;pop=null;render()}
-function selD(s){sel=s;pop=(S.apts||[]).some(a=>a.d===s)?{t:"view"}:null;render()}
+function selD(s){const same=sel===s,has=(S.apts||[]).some(a=>a.d===s);sel=s;pop=has?{t:"view"}:same?{t:"form"}:null;render()}
 document.addEventListener("touchmove",e=>{if(pop&&!e.target.closest(".md"))e.preventDefault()},{passive:false});
 function fmtT(el){let d=el.value.replace(/\D/g,"").slice(0,4);if(d.length&&+d[0]>2)d="0"+d;d=d.slice(0,4);if(d.length>=2&&+d.slice(0,2)>23)d="23"+d.slice(2);if(d.length>=4&&+d.slice(2,4)>59)d=d.slice(0,2)+"59";else if(d.length>=3&&+d[2]>5)d=d.slice(0,2)+"5"+d.slice(3);el.value=d.length>2?d.slice(0,2)+":"+d.slice(2):d}
 function saveA(id){const v=x=>document.getElementById(x).value,t=v("at").trim();if(!t){document.getElementById("at").focus();return}const hh=v("ah");if(hh&&!/^([01]\d|2[0-3]):[0-5]\d$/.test(hh)){document.getElementById("ah").focus();return}
