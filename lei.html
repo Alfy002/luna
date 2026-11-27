@@ -368,8 +368,9 @@ nav.grab button,nav.grab button.on{font-weight:500}
 nav.grab button.hv{font-weight:800}
 .lei .av{cursor:pointer;overflow:hidden}
 .lei .av img{width:100%;height:100%;object-fit:cover;display:block}
+#sw{position:absolute;top:16px;right:max(16px,calc(50% - 224px));z-index:50;text-decoration:none;cursor:pointer}#sw:active{filter:brightness(.9)}
 </style></head><body>
-<div id="app"></div>
+<a id="sw" class="pill" href="#">Lui</a><div id="app"></div>
 <nav><div id="nav"></div></nav>
 <script>
 const PH={
@@ -468,7 +469,7 @@ function ph(day,L,P){const o=L-14;
  if(day>=o-1&&day<=o+1)return"ovul";if(day>=P+1&&day<=o-2)return"foll";
  if(day>=o+4&&day<=L-5)return"lut";return"neu"}
 function theme(k){const r=document.documentElement.style;r.setProperty("--a",PH[k].c);r.setProperty("--s",PH[k].s)}
-let tab="home",dk=null,nid=null,delArm=false;
+let tab=["home","ideas","notes","lei"].includes(location.hash.slice(1))?location.hash.slice(1):"home",dk=null,nid=null,delArm=false;
 function setTab(t){cleanN();if(t==="home"&&tab!=="home")hk="say";tab=t;nid=null;delArm=false;render();window.scrollTo(0,0)}
 function ring(L,P,day){const R=80,C=2*Math.PI*R,sg=C/L;let h='<svg viewBox="0 0 200 200" width="230" height="230">';
  for(let i=1;i<=L;i++){const k=ph(i,L,P);h+=`<circle cx="100" cy="100" r="${R}" fill="none" stroke="${PH[k].c}" stroke-opacity="${i===day?1:.45}" stroke-width="14" stroke-dasharray="${sg-1.2} ${C-sg+1.2}" stroke-dashoffset="${-(i-1)*sg}" transform="rotate(-90 100 100)"/>`}
@@ -504,7 +505,7 @@ function home(){const{L,last,d,P}=calc(),late=d>L,day=late?L:d,k=ph(day,L,P),p=P
  const FP=[[-2,"left:calc(50% - 211px);top:127px",48],[-1,"left:calc(50% - 157px);top:107px",54],[0,"left:calc(50% - 60px);top:39px",120],[1,"left:calc(50% + 103px);top:107px",54],[2,"left:calc(50% + 163px);top:127px",48]];
  const fl=FP.map(([o,st,z],i)=>`<div class="fl${o===0?" c0":""}" style="${st}"><div class="fi" style="animation-duration:${(4.2+[0,1,2,1,0][i]*.6).toFixed(2)}s;animation-delay:-${([0,1,2,1,0][i]*1.1+(performance.now()-T0)/1000).toFixed(2)}s">${bub(sg[((ci+o)%ns+ns)%ns][0],z)}</div></div>`).join("");
  const tabs=[["say","Dire"],["do","Fare"],["dont","Evitare"]],ic={do:"✓",dont:"✕",say:"“"};
- return`<div class="top"><div class="dt">${t.toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long"})}</div><a class="pill" href="lui" style="text-decoration:none">Lui</a></div>
+ return`<div class="top"><div class="dt">${t.toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long"})}</div></div>
  <h1 class="ttl">Com’è ${nm?esc(nm):"lei"} ${OFF?t.toLocaleDateString("it-IT",{weekday:"long"}):"oggi"}?</h1>
  <div class="stage"><div class="stin"><div class="big" onclick="sfx(moodK());bnc()"><i class="bsp"></i><b>${MD[k]}</b><small>${p.n}</small></div>${fl}</div></div>
  <div class="days">${strip}</div>
@@ -691,7 +692,7 @@ function calGo(d){const el=document.querySelector("#calp .cal");if(!el){cm+=d;re
 function calIn(){if(!calA)return;const d=calA;calA=0;const el=document.querySelector("#calp .cal");if(!el)return;
  el.style.transition="none";el.style.opacity=0;el.style.transform="translateX("+(d*28)+"px)";el.getBoundingClientRect();
  el.style.transition="opacity .22s,transform .22s";el.style.opacity=1;el.style.transform="none"}
-const _render=render;render=function(){const nn=document.querySelector("nav");if(nn)nn.classList.remove("mini");const pa0=document.querySelector(".lei .ab"),pv=pa0?[pa0.style.getPropertyValue("--a"),pa0.style.getPropertyValue("--s")]:null;const lo=[...document.querySelectorAll(".lc")].map(d=>d.open);_render();{const ab=document.querySelector(".lei .ab");if(ab&&pv){const na=ab.style.getPropertyValue("--a"),nS=ab.style.getPropertyValue("--s");if(na!==pv[0]){ab.style.setProperty("--a",pv[0]);ab.style.setProperty("--s",pv[1]);ab.getBoundingClientRect();ab.style.setProperty("--a",na);ab.style.setProperty("--s",nS)}}}document.querySelectorAll(".lc").forEach((d,i)=>{if(lo[i])d.open=true});document.documentElement.style.overflow=document.body.style.overflow=(pop&&tab==="lei")?"hidden":"";fdx=null;fitBig();calIn();const n=document.getElementById("nav");n.parentNode.style.display=n.innerHTML.trim()?"":"none";placePill()};
+const _render=render;render=function(){const nn=document.querySelector("nav");if(nn)nn.classList.remove("mini");const pa0=document.querySelector(".lei .ab"),pv=pa0?[pa0.style.getPropertyValue("--a"),pa0.style.getPropertyValue("--s")]:null;const lo=[...document.querySelectorAll(".lc")].map(d=>d.open);_render();{const ab=document.querySelector(".lei .ab");if(ab&&pv){const na=ab.style.getPropertyValue("--a"),nS=ab.style.getPropertyValue("--s");if(na!==pv[0]){ab.style.setProperty("--a",pv[0]);ab.style.setProperty("--s",pv[1]);ab.getBoundingClientRect();ab.style.setProperty("--a",na);ab.style.setProperty("--s",nS)}}}document.querySelectorAll(".lc").forEach((d,i)=>{if(lo[i])d.open=true});document.documentElement.style.overflow=document.body.style.overflow=(pop&&tab==="lei")?"hidden":"";fdx=null;fitBig();calIn();const n=document.getElementById("nav");n.parentNode.style.display=n.innerHTML.trim()?"":"none";placePill();swUpd()};
 document.addEventListener("click",e=>{const sm=e.target.closest(".lc summary");if(!sm)return;e.preventDefault();
  const d=sm.parentNode;if(d._busy)return;d._busy=true;
  const cs=getComputedStyle(d),col=sm.offsetHeight+parseFloat(cs.paddingTop)+parseFloat(cs.paddingBottom)+parseFloat(cs.borderTopWidth)+parseFloat(cs.borderBottomWidth),opening=!d.open;
@@ -721,6 +722,7 @@ window.addEventListener("resize",placePill);
   if(b){lp.style.width=b.offsetWidth+"px";lp.style.height=b.offsetHeight+"px";lp.style.transform=`translate(${d.offsetLeft+b.offsetLeft}px,${d.offsetTop+b.offsetTop}px)`;if(b.dataset.t&&b.dataset.t!==tab)setTab(b.dataset.t)}else placePill()};
  window.addEventListener("pointerup",e=>end(e,true));window.addEventListener("pointercancel",e=>end(e,false));
  nv.addEventListener("click",e=>{if(sup){e.stopPropagation();e.preventDefault();sup=false}},true)})();
+function swUpd(){const a=document.getElementById("sw");if(!a)return;a.textContent="Lui";a.href="lui#"+tab;a.style.display=(tab==="notes"&&nid)?"none":""}
 render();normSfx();
 if("serviceWorker"in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
 </script></body></html>

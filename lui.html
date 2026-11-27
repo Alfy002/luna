@@ -367,8 +367,9 @@ nav.grab button,nav.grab button.on{font-weight:500}
 nav.grab button.hv{font-weight:800}
 .lei .av{cursor:pointer;overflow:hidden}
 .lei .av img{width:100%;height:100%;object-fit:cover;display:block}
+#sw{position:absolute;top:16px;right:max(16px,calc(50% - 224px));z-index:50;text-decoration:none;cursor:pointer}#sw:active{filter:brightness(.9)}
 </style></head><body>
-<div id="app"></div>
+<a id="sw" class="pill" href="#">Lei</a><div id="app"></div>
 <nav><div id="nav"></div></nav>
 <script>
 const T={
@@ -457,7 +458,7 @@ const add=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
 const fd=d=>d.toLocaleDateString("it-IT",{day:"numeric",month:"short"});
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 function theme(k){const r=document.documentElement.style;r.setProperty("--a",PH[k].c);r.setProperty("--s",PH[k].s)}
-let tab="home",dk=null,nid=null,delArm=false;
+let tab=["home","ideas","notes","lei"].includes(location.hash.slice(1))?location.hash.slice(1):"home",dk=null,nid=null,delArm=false;
 let hk="do",ik="fare",cm=0,sel=null;
 function setTab(t){cleanN();if(t==="home"&&tab!=="home")hk="do";tab=t;nid=null;delArm=false;pop=null;render();window.scrollTo(0,0)}
 const mk=dt=>{const v=S.mood[iso(dt)];return v===0||v===1||v===2?MO[v]:null};
@@ -493,7 +494,7 @@ function home(){const t=today(),ck=mk(t),k=ck||"unk",p=PM[k];theme(ck||"neu");
  const FP=[[-2,"left:calc(50% - 211px);top:127px",48],[-1,"left:calc(50% - 157px);top:107px",54],[0,"left:calc(50% - 60px);top:39px",120],[1,"left:calc(50% + 103px);top:107px",54],[2,"left:calc(50% + 163px);top:127px",48]];
  const fl=FP.map(([o,st,z],i)=>`<div class="fl${o===0?" c0":""}" style="${st}"${o?` onclick="pk(${o})"`:""}><div class="fi" style="animation-duration:${(4.2+[0,1,2,1,0][i]*.6).toFixed(2)}s;animation-delay:-${([0,1,2,1,0][i]*1.1+(performance.now()-T0)/1000).toFixed(2)}s">${bub(kd(o),z)}</div></div>`).join("");
  const tabs=[["do","Fare"],["dont","Evitare"],["say","Mi dico"]];
- return`<div class="top"><div class="dt">${real().toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long"})}</div><a class="pill" href="lei" style="text-decoration:none">Lei</a></div>
+ return`<div class="top"><div class="dt">${real().toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long"})}</div></div>
  <h1 class="ttl">${ttl}</h1>
  <div class="stage"><div class="stin"><div class="big" onclick="pk(0)"><i class="bsp"></i><b>${ck?MDD[ck]:(OFF>0?"Non si sa":"Da segnare")}</b><small>${ck?p.n:(OFF>0?"Giorno futuro":"Tocca per scegliere")}</small></div>${fl}</div></div>
  <div class="days">${strip}</div>
@@ -615,7 +616,7 @@ function calGo(d){const el=document.querySelector("#calp .cal");if(!el){cm+=d;re
 function calIn(){if(!calA)return;const d=calA;calA=0;const el=document.querySelector("#calp .cal");if(!el)return;
  el.style.transition="none";el.style.opacity=0;el.style.transform="translateX("+(d*28)+"px)";el.getBoundingClientRect();
  el.style.transition="opacity .22s,transform .22s";el.style.opacity=1;el.style.transform="none"}
-const _render=render;render=function(){const nn=document.querySelector("nav");if(nn)nn.classList.remove("mini");const pa0=document.querySelector(".lei .ab"),pv=pa0?[pa0.style.getPropertyValue("--a"),pa0.style.getPropertyValue("--s")]:null;const lo=[...document.querySelectorAll(".lc")].map(d=>d.open);_render();{const ab=document.querySelector(".lei .ab");if(ab&&pv){const na=ab.style.getPropertyValue("--a"),nS=ab.style.getPropertyValue("--s");if(na!==pv[0]){ab.style.setProperty("--a",pv[0]);ab.style.setProperty("--s",pv[1]);ab.getBoundingClientRect();ab.style.setProperty("--a",na);ab.style.setProperty("--s",nS)}}}document.querySelectorAll(".lc").forEach((d,i)=>{if(lo[i])d.open=true});document.documentElement.style.overflow=document.body.style.overflow=(pop&&(tab==="lei"||tab==="home"))?"hidden":"";fdx=null;fitBig();calIn();const n=document.getElementById("nav");n.parentNode.style.display=n.innerHTML.trim()?"":"none";placePill()};
+const _render=render;render=function(){const nn=document.querySelector("nav");if(nn)nn.classList.remove("mini");const pa0=document.querySelector(".lei .ab"),pv=pa0?[pa0.style.getPropertyValue("--a"),pa0.style.getPropertyValue("--s")]:null;const lo=[...document.querySelectorAll(".lc")].map(d=>d.open);_render();{const ab=document.querySelector(".lei .ab");if(ab&&pv){const na=ab.style.getPropertyValue("--a"),nS=ab.style.getPropertyValue("--s");if(na!==pv[0]){ab.style.setProperty("--a",pv[0]);ab.style.setProperty("--s",pv[1]);ab.getBoundingClientRect();ab.style.setProperty("--a",na);ab.style.setProperty("--s",nS)}}}document.querySelectorAll(".lc").forEach((d,i)=>{if(lo[i])d.open=true});document.documentElement.style.overflow=document.body.style.overflow=(pop&&(tab==="lei"||tab==="home"))?"hidden":"";fdx=null;fitBig();calIn();const n=document.getElementById("nav");n.parentNode.style.display=n.innerHTML.trim()?"":"none";placePill();swUpd()};
 document.addEventListener("click",e=>{const sm=e.target.closest(".lc summary");if(!sm)return;e.preventDefault();
  const d=sm.parentNode;if(d._busy)return;d._busy=true;
  const cs=getComputedStyle(d),col=sm.offsetHeight+parseFloat(cs.paddingTop)+parseFloat(cs.paddingBottom)+parseFloat(cs.borderTopWidth)+parseFloat(cs.borderBottomWidth),opening=!d.open;
@@ -647,6 +648,7 @@ window.addEventListener("resize",placePill);
  nv.addEventListener("click",e=>{if(sup){e.stopPropagation();e.preventDefault();sup=false}},true)})();
 addEventListener("storage",e=>{if(e.key===KL&&!pop&&!nid)render()});
 document.addEventListener("visibilitychange",()=>{if(!document.hidden&&!pop&&!nid)render()});
+function swUpd(){const a=document.getElementById("sw");if(!a)return;a.textContent="Lei";a.href="lei#"+tab;a.style.display=(tab==="notes"&&nid)?"none":""}
 render();normSfx();
 
 </script></body></html>
