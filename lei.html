@@ -465,7 +465,7 @@ const fd=d=>d.toLocaleDateString("it-IT",{day:"numeric",month:"short"});
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 function calc(){const c=[...S.cycles].sort();let L=28;
  if(c.length>1){let g=0;for(let i=1;i<c.length;i++)g+=diff(D(c[i-1]),D(c[i]));L=Math.min(40,Math.max(21,Math.round(g/(c.length-1))))}
- const last=add(D(c[c.length-1]),-Math.floor((S.p||5)/2));let d=Math.max(1,diff(last,today())+1);const d0=diff(last,real())+1;if(d0<=L&&d>L)d=(d-1)%L+1;return{L,last,d,P:S.p}}
+ const last=add(D(c[c.length-1]),-Math.floor((S.p||5)/2));let d=diff(last,today())+1;if(d<1)d=((d-1)%L+L)%L+1;const d0=diff(last,real())+1;if(d0<=L&&d>L)d=(d-1)%L+1;return{L,last,d,P:S.p}}
 function ph(day,L,P){const o=L-14;
  if(day<=P)return"mest";if(day>=L-4)return"pms";
  if(day>=o-1&&day<=o+1)return"ovul";if(day>=P+1&&day<=o-2)return"foll";
@@ -502,13 +502,13 @@ function home(){const{L,last,d,P}=calc(),late=d>L,day=late?L:d,k=ph(day,L,P),p=P
  const nm=(S.lei&&S.lei.n||"").trim(),t=today(),WD=["D","L","M","M","G","V","S"];
  let ch=[],pk=k;for(let n=1;n<=L&&ch.length<4;n++){const dd=((day-1+n)%L)+1,q=ph(dd,L,P);if(q!==pk){ch.push([q,add(t,n)]);pk=q}}
  let nx=add(last,L);while(nx<=t&&!late)nx=add(nx,L);
- const strip=[0,1,2,3,4,5,6].map(i=>{const dt=add(real(),i),q=late?k:phOn(dt);return`<div class="dy${i===OFF?" t":""}${OFF&&i===0?" r":""}" onclick="setOff(${i})"><div class="lt">${WD[dt.getDay()]}</div><div class="bb">${bub(q,40)}</div></div>`}).join("");
+ const strip=[-2,-1,0,1,2,3,4].map(i=>{const dt=add(real(),i),q=late&&i>=0?k:phOn(dt);return`<div class="dy${i===OFF?" t":""}${OFF&&i===0?" r":""}" onclick="setOff(${i})"><div class="lt">${WD[dt.getDay()]}</div><div class="bb">${bub(q,40)}</div></div>`}).join("");
  const sg=segs(L,P),ns=sg.length;let ci=0;sg.forEach((x,j)=>{if(x[1]<=day)ci=j});
  const FP=[[-2,"left:calc(50% - 211px);top:127px",48],[-1,"left:calc(50% - 157px);top:107px",54],[0,"left:calc(50% - 60px);top:39px",120],[1,"left:calc(50% + 103px);top:107px",54],[2,"left:calc(50% + 163px);top:127px",48]];
  const fl=FP.map(([o,st,z],i)=>`<div class="fl${o===0?" c0":""}" style="${st}"><div class="fi" style="animation-duration:${(4.2+[0,1,2,1,0][i]*.6).toFixed(2)}s;animation-delay:-${([0,1,2,1,0][i]*1.1+(performance.now()-T0)/1000).toFixed(2)}s">${bub(sg[((ci+o)%ns+ns)%ns][0],z)}</div></div>`).join("");
  const tabs=[["say","Dire"],["do","Fare"],["dont","Evitare"]],ic={do:"✓",dont:"✕",say:"“"};
  return`<div class="top"><div class="dt">${t.toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long"})}</div></div>
- <h1 class="ttl">Com’è ${nm?esc(nm):"lei"} ${OFF?t.toLocaleDateString("it-IT",{weekday:"long"}):"oggi"}?</h1>
+ <h1 class="ttl">Com’è ${nm?esc(nm):"lei"} ${OFF===-1?"ieri":OFF?t.toLocaleDateString("it-IT",{weekday:"long"}):"oggi"}?</h1>
  <div class="stage"><div class="stin"><div class="big" onclick="sfx(moodK());bnc()"><i class="bsp"></i><b>${MD[k]}</b><small>${p.n}</small></div>${fl}</div></div>
  <div class="days">${strip}</div>
  <div class="pn"><div class="ix">${bub(k,42)}<div><span class="tag">${p.n}</span><div>${esc(p.i)}</div></div></div>
