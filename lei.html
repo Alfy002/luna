@@ -371,6 +371,9 @@ nav.grab button.hv{font-weight:800}
 #sw{position:absolute;top:16px;right:max(16px,calc(50% - 224px));z-index:50;text-decoration:none;cursor:pointer}#sw:active{filter:brightness(.9)}
 .fab{right:max(20px,calc(50% - 220px))}
 #app .seg+.tips:not(#il){min-height:215.5px}
+.lc summary{position:relative;touch-action:manipulation}
+.lc summary::before{content:"";position:absolute;inset:-17px -17px -12px -17px}
+.lc:not([open]) summary::before{bottom:-17px}
 </style></head><body>
 <a id="sw" class="pill" href="#">Lui</a><div id="app"></div>
 <nav><div id="nav"></div></nav>
@@ -508,7 +511,7 @@ function home(){const{L,last,d,P}=calc(),late=d>L,day=late?L:d,k=ph(day,L,P),p=P
  const fl=FP.map(([o,st,z],i)=>`<div class="fl${o===0?" c0":""}" style="${st}"><div class="fi" style="animation-duration:${(4.2+[0,1,2,1,0][i]*.6).toFixed(2)}s;animation-delay:-${([0,1,2,1,0][i]*1.1+(performance.now()-T0)/1000).toFixed(2)}s">${bub(sg[((ci+o)%ns+ns)%ns][0],z)}</div></div>`).join("");
  const tabs=[["say","Dire"],["do","Fare"],["dont","Evitare"]],ic={do:"✓",dont:"✕",say:"“"};
  return`<div class="top"><div class="dt">${t.toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long"})}</div></div>
- <h1 class="ttl">Com’è ${nm?esc(nm):"lei"} ${OFF===-1?"ieri":OFF?t.toLocaleDateString("it-IT",{weekday:"long"}):"oggi"}?</h1>
+ <h1 class="ttl">Com’${OFF<0?"era":"è"} ${nm?esc(nm):"lei"} ${OFF===-1?"ieri":OFF===1?"domani":OFF?t.toLocaleDateString("it-IT",{weekday:"long"}):"oggi"}?</h1>
  <div class="stage"><div class="stin"><div class="big" onclick="sfx(moodK());bnc()"><i class="bsp"></i><b>${MD[k]}</b><small>${p.n}</small></div>${fl}</div></div>
  <div class="days">${strip}</div>
  <div class="pn"><div class="ix">${bub(k,42)}<div><span class="tag">${p.n}</span><div>${esc(p.i)}</div></div></div>

@@ -378,6 +378,9 @@ nav.grab button.hv{font-weight:800}
 .mbar i{display:block;width:100%;border-radius:14px 14px 0 0}
 .mcol small{font-size:11px;font-weight:700;color:var(--m);text-align:center}
 .mi{margin:12px 0 0;font-size:14px;line-height:1.4;color:#1f2430}
+.lc summary{position:relative;touch-action:manipulation}
+.lc summary::before{content:"";position:absolute;inset:-17px -17px -12px -17px}
+.lc:not([open]) summary::before{bottom:-17px}
 </style></head><body>
 <a id="sw" class="pill" href="#">Lei</a><div id="app"></div>
 <nav><div id="nav"></div></nav>
@@ -393,13 +396,13 @@ fel:{do:["Continua così: ricorda cosa ti ha fatto stare bene oggi","Segnalo in 
 dont:["Non caricarti di impegni sull’onda dell’entusiasmo","Evita di trascurare sonno e pause","Non dare per scontato ciò che funziona"],
 say:["Mi sento bene e me lo sono meritato.","Questa routine funziona: la tengo.","Posso godermela senza sensi di colpa."]}};
 const PM={
-del:{n:"Deluso",c:"#5C8FD6",s:"#E8F0FC",i:"Giornata pesante: qualcosa non è andato come speravi. Capita, ed è giusto prendersi il tempo per sistemare le cose."},
+del:{n:"Deluso",c:"#E5645E",s:"#FDEAE8",i:"Giornata pesante: qualcosa non è andato come speravi. Capita, ed è giusto prendersi il tempo per sistemare le cose."},
 neu:{n:"Neutro",c:"#9B7FD1",s:"#F1ECFA",i:"Giornata nella media, né su né giù. Un buon momento per mettere ordine e capire cosa ti va di fare."},
-fel:{n:"Felice",c:"#3FAE6A",s:"#E6F7EC",i:"Ti senti bene, con energia e buonumore. Vale la pena capire cosa ha funzionato per poterlo ripetere."},
+fel:{n:"Felice",c:"#E6AC48",s:"#FFF4D8",i:"Ti senti bene, con energia e buonumore. Vale la pena capire cosa ha funzionato per poterlo ripetere."},
 unk:{n:"Non segnato",c:"#A0A4AA",s:"#FAFAFB",i:"Nessun umore segnato. A fine giornata tocca l’emoji e scegli 0, 1 o 2.",do:[]}};
 ["del","neu","fel"].forEach(k=>PM[k].do=T[k].do);
 const PH=PM,MO=["del","neu","fel"],ORD=["foll","neu","pms"],SK={del:"pms",neu:"neu",fel:"foll"},HT=["say","do","dont"];
-const BC={del:"#9DB9F0",neu:"#C5B3EC",fel:"#8FD6A0"};
+const BC={del:"#F28B82",neu:"#C5B3EC",fel:"#FFD45E"};
 const MDD={del:"Un po’ giù",neu:"Tranquillo",fel:"Carico e sereno"};
 const Y={
 del:[["Sfogo","Dai un nome a ciò che senti","Scrivere in una frase cosa ti ha deluso rende il pensiero meno confuso e più gestibile."],["Corpo","Muoviti anche poco","Dieci minuti di camminata aiutano l’umore più di quanto sembri."],["Persone","Solo sì, isolato no","Tempo per te va bene: un messaggio a Luna o a un amico basta per non chiuderti."]],
@@ -467,7 +470,7 @@ const diff=(a,b)=>Math.round((b-a)/864e5);
 const add=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
 const fd=d=>d.toLocaleDateString("it-IT",{day:"numeric",month:"short"});
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-function theme(k){const r=document.documentElement.style;r.setProperty("--a",PH[k].c);r.setProperty("--s",PH[k].s)}
+function theme(k){const r=document.documentElement.style;r.setProperty("--a",PH[k].c);r.setProperty("--s",k==="unk"?"#F2F3F5":PH[k].s)}
 let tab=["home","ideas","notes","lei"].includes(location.hash.slice(1))?location.hash.slice(1):"home",dk=null,nid=null,delArm=false;
 let hk="say",ik="fare",cm=0,sel=null;
 function setTab(t){cleanN();if(t==="home"&&tab!=="home")hk="say";tab=t;nid=null;delArm=false;pop=null;render();window.scrollTo(0,0)}
@@ -494,7 +497,7 @@ function pk(o){pm(iso(add(today(),o)))}
 function setM(d,i){if(S.mood[d]===i)delete S.mood[d];else{S.mood[d]=i;sfx(SK[MO[i]])}pop=null;save();render();bnc()}
 function popM(){if(!pop||pop.t!=="mood")return"";const cur=S.mood[pop.d],dl=D(pop.d).toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long"});
  return`<div class="ov" onclick="pop=null;render()"><div class="md sm" style="--a:#A0A4AA;min-width:264px" onclick="event.stopPropagation()"><button class="px" onclick="pop=null;render()">${LI("<path d='M6 6l12 12M18 6L6 18'/>")}</button><h3>Come ti senti?</h3><small class="pd">${dl}</small><div class="qs">${MO.map((k,i)=>`<div><button class="q${cur===i?" on":""}" style="--a:${PM[k].c}" aria-label="${PM[k].n}" onclick="setM('${pop.d}',${i})">${bub(k,40)}</button>${i}</div>`).join("")}</div></div></div>`}
-function home(){const t=today(),ck=mk(t),k=ck||"unk",p=PM[k];theme(ck||"neu");
+function home(){const t=today(),ck=mk(t),k=ck||"unk",p=PM[k];theme(ck||"unk");
  const WD=["D","L","M","M","G","V","S"],wd=t.toLocaleDateString("it-IT",{weekday:"long"});
  let n=0,sm=0;for(let i=0;i<7;i++){const v=S.mood[iso(add(real(),-i))];if(v===0||v===1||v===2){n++;sm+=v}}
  const avg=n?sm/(2*n):0,an=avg<.34?"Deluso":avg<.67?"Neutro":"Felice";
@@ -534,7 +537,7 @@ document.addEventListener("touchstart",go,{passive:false});document.addEventList
 document.addEventListener("input",e=>{if(e.inputType!=="insertParagraph")return;const n=getSelection().anchorNode,el=n&&(n.nodeType===1?n:n.parentElement),li=el&&el.closest&&el.closest("#ed ul.cl>li");if(li){li.classList.remove("dn");upd("h",document.getElementById("ed").innerHTML)}});
 document.addEventListener("selectionchange",()=>{const e=document.getElementById("ed");if(e&&document.activeElement===e)tbs()});
 function fmt(c){const e=document.getElementById("ed");if(!e)return;e.focus();document.execCommand(c);upd("h",e.innerHTML);tbs()}
-function notes(){const k=curK();theme(k);
+function notes(){const k=curK();theme(mk(today())||"unk");
  if(nid){const n=S.notes.find(x=>x.id===nid);if(!n){nid=null;return notes()}
  return`<div class="top" style="justify-content:flex-end"><button class="pill nb" onclick="backN()">Torna a note</button></div>
  <div class="pn ne">
@@ -555,7 +558,7 @@ function chkDone(){const k=iso(real());if(!S.done||S.done.k!==k){S.done={k,i:[]}
 function listH(){chkDone();const m=curK();return IDEE[m][ik].map((v,i)=>{const id=m+ik+i,dn=S.done.i.includes(id);return`<div class="tp${dn?" dn":""}${ik==="pen"?" sy":""}" data-n="${i+1}" onclick="tgl('${id}',this)"><i>${dn?"✓":i+1}</i><span>${esc(v)}</span></div>`}).join("")}
 function tgl(id,el){chkDone();const j=S.done.i.indexOf(id);j<0?S.done.i.push(id):S.done.i.splice(j,1);save();el.classList.toggle("dn",j<0);el.querySelector("i").textContent=j<0?"✓":el.dataset.n;}
 function setIk(id){ik=id;const i=CAT.findIndex(c=>c[0]===id);document.querySelectorAll("#iseg button").forEach((b,j)=>b.classList.toggle("on",j===i));document.querySelector("#iseg .pl").style.transform=`translateX(calc(${i}*(100% + 4px)))`;document.getElementById("il").innerHTML=listH()}
-function ideas(){const m=curK();theme(m);const list=listH(),i=CAT.findIndex(c=>c[0]===ik);
+function ideas(){const m=curK();theme(mk(today())||"unk");const list=listH(),i=CAT.findIndex(c=>c[0]===ik);
  return`<h1>Idee</h1><p class="sub">Per l’umore <b style="color:var(--a)">${PM[m].n}</b></p>
  <div class="seg" id="iseg"><i class="pl" style="width:calc((100% - 14px)/2);transform:translateX(calc(${i}*(100% + 4px)))"></i>${CAT.map(([c,l])=>`<button class="${c===ik?"on":""}" onclick="tapIk('${c}')">${l}</button>`).join("")}</div>
  <div class="tips" id="il">${list}</div>`}
@@ -590,7 +593,7 @@ function popH(){if(!pop)return"";const ap=(S.apts||[]).filter(a=>a.d===sel).sort
  else if(pop.t==="form"){const e=pop.id?(S.apts||[]).find(a=>a.id===pop.id):null;h=`${x}<h3>${e?"Modifica appuntamento":"Nuovo appuntamento"}</h3><small class="pd">${dl}</small><div class="lr"><div class="lf" style="flex:1;min-width:0"><label>Nome</label><input type="text" id="at" placeholder="Es. Cena fuori" value="${e?esc(e.t):""}"></div><div class="lf" style="width:84px;flex:none"><label>Orario</label><input type="text" id="ah" inputmode="numeric" maxlength="5" placeholder="00:00" oninput="fmtT(this)" value="${e?e.h||"":""}"></div></div><div class="lf"><label>Note</label><textarea id="an" rows="3" placeholder="Eventuali note…">${e?esc(e.n||""):""}</textarea></div>${sel>=iso(add(real(),-1))?adv(P):""}<div class="nrow">${e?`<button class="dq${dla?" arm":""}" onclick="armA('${e.id}',this)" aria-label="Elimina appuntamento">${LI(TRASH,22)}</button>`:""}<button class="cta h48" onclick="saveA(${e?`'${e.id}'`:"null"})">Salva</button></div>`}
  else h=`${x}<h3 style="text-transform:capitalize">${dl}</h3><small class="pd">${P.n}</small>${ap.map(a=>`<div class="vi col" onclick="pop={t:'form',id:'${a.id}'};render()"><div class="vh"><b>${esc(a.t)}</b><span class="et">${a.h||"Tutto il giorno"}</span></div>${a.n?`<p class="vn">${esc(a.n)}</p>`:""}${a.p?`<p class="vn">${esc(a.p)}</p>`:""}${a.d>=iso(add(real(),-1))?adv(P):""}</div>`).join("")}`;
  return`<div class="ov" onclick="pop=null;render()"><div class="md${pop.t==='view'||pop.t==='form'?' vw':''}${pop.t==='form'?' fm':''}" style="--a:${P.c};--s:${P.s}" onclick="event.stopPropagation()">${h}</div></div>`}
-function lei(){theme(curK());const l=S.me||{},t=today(),ap=S.apts,hs=S.hearts,pr=S.pre;sel=sel||iso(real());
+function lei(){theme(mk(today())||"unk");const l=S.me||{},t=today(),ap=S.apts,hs=S.hearts,pr=S.pre;sel=sel||iso(real());
  let b=msHint();
  const f=new Date(t.getFullYear(),t.getMonth()+cm,1),n=new Date(f.getFullYear(),f.getMonth()+1,0).getDate(),o=(f.getDay()+6)%7;
  let c=`<div class="pn" id="calp" style="touch-action:pan-y"><div class="mh"><button class="rb" onclick="calGo(-1)">${LI("<path d='M15 6l-6 6 6 6'/>")}</button><b style="text-transform:capitalize">${f.toLocaleDateString("it-IT",{month:"long",year:"numeric"})}</b><button class="rb" onclick="calGo(1)">${LI("<path d='M9 6l6 6-6 6'/>")}</button></div><div class="cal">${["L","M","M","G","V","S","D"].map(x=>`<small>${x}</small>`).join("")}`+Array.from({length:o},(_,j)=>`<span>${new Date(f.getFullYear(),f.getMonth(),0).getDate()-o+1+j}</span>`).join("");
@@ -605,7 +608,7 @@ function lei(){theme(curK());const l=S.me||{},t=today(),ap=S.apts,hs=S.hearts,pr
  ${c}
  <details class="pn lc"><summary>Riepilogo<span class="ch">${LI("<path d='M6 9l6 6 6-6'/>",18)}</span></summary><div class="mc">${(()=>{const mx=Math.max(1,...cn),tot=cn[0]+cn[1]+cn[2],el=cm<0?n:cm===0?t.getDate():0,top=[2,1,0].reduce((p,i)=>cn[i]>cn[p]?i:p,2);
   return`<div class="mchart">${[2,1,0].map(i=>{const k=MO[i];return`<div class="mcol"><b>${cn[i]}</b><div class="mbar"><i style="height:${cn[i]?Math.max(6,Math.round(cn[i]/mx*100)):0}%;background:${PM[k].c}"></i></div>${bub(k,34)}<small>${PM[k].n}</small></div>`}).join("")}</div><p class="mi">${tot?`<b>${tot}</b> ${tot===1?"giorno segnato":"giorni segnati"} su ${el} in ${mn}. Umore più frequente: <b style="color:${PM[MO[top]].c}">${PM[MO[top]].n}</b>.`:`Nessun umore segnato in ${mn}.`}</p>`})()}</div></details>
- <details class="pn lc"><summary>Stati d’animo<span class="ch">${LI("<path d='M6 9l6 6 6-6'/>",18)}</span></summary><div class="fc">${[2,1,0].map(i=>{const k=MO[i];return`<div class="fcd" style="background:${PM[k].s}"><b style="color:${PM[k].c}">${PM[k].n}</b><p>${esc(PM[k].i)}</p></div>`}).join("")}</div></details>
+ <details class="pn lc"><summary>Stati d’animo<span class="ch">${LI("<path d='M6 9l6 6 6-6'/>",18)}</span></summary><div class="fc">${[2,1,0].map(i=>{const k=MO[i];return`<div class="fcd" style="background:${PM[k].s}"><b style="color:${PM[k].c}">${PM[k].n}</b><p>${esc(PM[k].i.replace(/^Giornata pesante: (.)/,(m,c)=>c.toUpperCase()))}</p></div>`}).join("")}</div></details>
  <div class="pn pf"><div class="ph"><span class="av" onclick="avTap()">${l.img?`<img src="${l.img}" alt="">`:esc((l.n||"").trim().charAt(0).toUpperCase())||LI("<circle cx='12' cy='8' r='4'/><path d='M4 21a8 8 0 0 1 16 0'/>",26)}</span><input type="file" id="avf" accept="image/*" hidden onchange="avUp(this)"><input type="text" class="nm" placeholder="Il tuo nome" value="${esc(l.n||"")}" oninput="sl('n',this.value)"></div>
  <div class="lf"><label>Mesiversario</label><div class="dv"><span class="${mm?"":"ph0"}">${mm?mm.split("-").reverse().join("/"):"gg/mm/aaaa"}</span><input type="date" value="${mm}" onchange="slm(this.value);render()"></div>${b?`<div class="hint">${b}</div>`:""}</div>
  <div class="lf"><label>Cose che mi piacciono</label><textarea rows="3" placeholder="Musica, sport, giochi…" oninput="sl('l',this.value)">${esc(l.l||"")}</textarea></div>
