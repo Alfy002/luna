@@ -493,7 +493,7 @@ function home(){const t=today(),ck=mk(t),k=ck||"unk",p=PM[k];theme(ck||"neu");
  const FP=[[-2,"left:calc(50% - 211px);top:127px",48],[-1,"left:calc(50% - 157px);top:107px",54],[0,"left:calc(50% - 60px);top:39px",120],[1,"left:calc(50% + 103px);top:107px",54],[2,"left:calc(50% + 163px);top:127px",48]];
  const fl=FP.map(([o,st,z],i)=>`<div class="fl${o===0?" c0":""}" style="${st}"${o?` onclick="pk(${o})"`:""}><div class="fi" style="animation-duration:${(4.2+[0,1,2,1,0][i]*.6).toFixed(2)}s;animation-delay:-${([0,1,2,1,0][i]*1.1+(performance.now()-T0)/1000).toFixed(2)}s">${bub(kd(o),z)}</div></div>`).join("");
  const tabs=[["do","Fare"],["dont","Evitare"],["say","Mi dico"]];
- return`<div class="top"><div class="dt">${real().toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long"})}</div><a class="pill" href="lei.html" style="text-decoration:none">Lei</a></div>
+ return`<div class="top"><div class="dt">${real().toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long"})}</div><a class="pill" href="lei" style="text-decoration:none">Lei</a></div>
  <h1 class="ttl">${ttl}</h1>
  <div class="stage"><div class="stin"><div class="big" onclick="pk(0)"><i class="bsp"></i><b>${ck?MDD[ck]:(OFF>0?"Non si sa":"Da segnare")}</b><small>${ck?p.n:(OFF>0?"Giorno futuro":"Tocca per scegliere")}</small></div>${fl}</div></div>
  <div class="days">${strip}</div>
