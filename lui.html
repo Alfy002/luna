@@ -489,7 +489,7 @@ function home(){const t=today(),ck=mk(t),k=ck||"unk",p=PM[k];theme(ck||"neu");
  const WD=["D","L","M","M","G","V","S"],wd=t.toLocaleDateString("it-IT",{weekday:"long"});
  let n=0,sm=0;for(let i=0;i<7;i++){const v=S.mood[iso(add(real(),-i))];if(v===0||v===1||v===2){n++;sm+=v}}
  const avg=n?sm/(2*n):0,an=avg<.34?"Deluso":avg<.67?"Neutro":"Felice";
- const ttl=OFF===0?"Come ti senti oggi?":OFF===-1?"Come ti sentivi ieri?":OFF<0?`Come ti sentivi ${wd}?`:OFF===1?"Come ti sentirai domani?":`Come ti sentirai ${wd}?`;
+ const ttl=OFF===0?"Come stai oggi?":OFF===-1?"Come stavi ieri?":OFF<0?`Come stavi ${wd}?`:OFF===1?"Come starai domani?":`Come starai ${wd}?`;
  const strip=[-4,-3,-2,-1,0,1,2].map(i=>{const dt=add(real(),i),q=i>0?"unk":(mk(dt)||"unk");return`<div class="dy${i===OFF?" t":""}${OFF&&i===0?" r":""}" onclick="setOff(${i})"><div class="lt">${WD[dt.getDay()]}</div><div class="bb">${bub(q,40)}</div></div>`}).join("");
  const kd=o=>{const dt=add(t,o);return dt>real()?"unk":(mk(dt)||"unk")};
  const FP=[[-2,"left:calc(50% - 211px);top:127px",48],[-1,"left:calc(50% - 157px);top:107px",54],[0,"left:calc(50% - 60px);top:39px",120],[1,"left:calc(50% + 103px);top:107px",54],[2,"left:calc(50% + 163px);top:127px",48]];
