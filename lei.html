@@ -504,7 +504,7 @@ function home(){const{L,last,d,P}=calc(),late=d>L,day=late?L:d,k=ph(day,L,P),p=P
  const FP=[[-2,"left:calc(50% - 211px);top:127px",48],[-1,"left:calc(50% - 157px);top:107px",54],[0,"left:calc(50% - 60px);top:39px",120],[1,"left:calc(50% + 103px);top:107px",54],[2,"left:calc(50% + 163px);top:127px",48]];
  const fl=FP.map(([o,st,z],i)=>`<div class="fl${o===0?" c0":""}" style="${st}"><div class="fi" style="animation-duration:${(4.2+[0,1,2,1,0][i]*.6).toFixed(2)}s;animation-delay:-${([0,1,2,1,0][i]*1.1+(performance.now()-T0)/1000).toFixed(2)}s">${bub(sg[((ci+o)%ns+ns)%ns][0],z)}</div></div>`).join("");
  const tabs=[["say","Dire"],["do","Fare"],["dont","Evitare"]],ic={do:"✓",dont:"✕",say:"“"};
- return`<div class="top"><div class="dt">${t.toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long"})}</div><a class="pill" href="lui.html" style="text-decoration:none">Lui</a></div>
+ return`<div class="top"><div class="dt">${t.toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long"})}</div><a class="pill" href="lui" style="text-decoration:none">Lui</a></div>
  <h1 class="ttl">Com’è ${nm?esc(nm):"lei"} ${OFF?t.toLocaleDateString("it-IT",{weekday:"long"}):"oggi"}?</h1>
  <div class="stage"><div class="stin"><div class="big" onclick="sfx(moodK());bnc()"><i class="bsp"></i><b>${MD[k]}</b><small>${p.n}</small></div>${fl}</div></div>
  <div class="days">${strip}</div>
