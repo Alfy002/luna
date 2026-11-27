@@ -19,6 +19,10 @@ main{height:100%;display:flex;flex-direction:column;align-items:center;justify-c
 .pad button:active{opacity:.4;transform:scale(.92)}
 .pad button{width:72px;justify-self:center;border-radius:50%}.pad button[data-k]{background:rgba(110,122,138,.32);transition:background .1s,opacity .1s,transform .1s}.pad button[data-k]:active{background:rgba(110,122,138,.55);opacity:1}
 .pad button[data-k=x]{width:54px;height:54px;align-self:center;background:rgba(110,122,138,.16)}.pad button[data-k=x]:active{background:rgba(110,122,138,.3)}
+.pad{--rg:clamp(8px,2.2vh,18px)}.pad{gap:var(--rg) 28px}
+.pad button[data-k]{position:relative}
+.pad button[data-k]::after{content:"";position:absolute;inset:calc(var(--rg)/-2) -20px}
+.pad button[data-k=x]::after{inset:calc(9px + var(--rg)/2) -29px calc(9px + var(--rg)/2) -29px;inset:calc(-9px - var(--rg)/2) -29px}
 .pad .gap{visibility:hidden}.pad svg{filter:drop-shadow(0 1px 4px rgba(60,80,110,.35))}
 </style></head><body>
 <main>
@@ -30,9 +34,10 @@ const PIN="3245";let v="",lk=false;
 const d=document.getElementById("d"),p=document.getElementById("p");
 const BK='<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9l-6-7z"/><path d="M12.5 9.5l5 5M17.5 9.5l-5 5"/></svg>';
 p.innerHTML=[1,2,3,4,5,6,7,8,9].map(n=>`<button data-k="${n}">${n}</button>`).join("")+`<button class="gap" tabindex="-1" aria-hidden="true"></button><button data-k="0">0</button><button data-k="x" aria-label="Cancella">${BK}</button>`;
+function go(){let b=location.pathname;if(!b.endsWith("/")){const s=b.split("/").pop();b=s.includes(".")?b.slice(0,b.length-s.length):b+"/"}return b+"lei"}
 function paint(){[...d.children].forEach((e,i)=>e.classList.toggle("on",i<v.length))}
 function key(k){if(lk)return;if(v.length>=4&&k!=="x")return;if(k==="x")v=v.slice(0,-1);else v+=k;paint();
- if(v.length===4){if(v===PIN)location.href="/lei";else{lk=true;if(navigator.vibrate)navigator.vibrate(120);d.classList.add("no");setTimeout(()=>{d.classList.remove("no");v="";paint();lk=false},500)}}}
+ if(v.length===4){if(v===PIN)location.href=go();else{lk=true;if(navigator.vibrate)navigator.vibrate(120);d.classList.add("no");setTimeout(()=>{d.classList.remove("no");v="";paint();lk=false},500)}}}
 p.addEventListener("click",e=>{const b=e.target.closest("button[data-k]");if(b)key(b.dataset.k)});
 document.addEventListener("keydown",e=>{if(/^\d$/.test(e.key))key(e.key);else if(e.key==="Backspace")key("x")});
 </script></body></html>
